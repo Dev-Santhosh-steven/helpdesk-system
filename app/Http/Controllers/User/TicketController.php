@@ -122,11 +122,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::findOrFail($id);
 
-        /*
-        |--------------------------------------------------------------------------
-        | RESOLVE TICKET (Admin / Staff Only)
-        |--------------------------------------------------------------------------
-        */
+
         if ($request->status === 'resolved') {
 
             if (!in_array(strtolower($user->role), ['admin','staff'])) {
@@ -138,11 +134,7 @@ class TicketController extends Controller
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | CLOSE TICKET (User Only)
-        |--------------------------------------------------------------------------
-        */
+
         if ($request->status === 'close') {
 
             if ($user->role !== 'user' || $ticket->user_id !== $user->id) {
@@ -161,24 +153,19 @@ class TicketController extends Controller
             $ticket->closed_at = now();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | REOPEN TICKET (Only From Closed - Only Once)
-        |--------------------------------------------------------------------------
-        */
+
         if ($request->status === 'reopened') {
 
-            // Only allow reopen from CLOSED status
+            
             if ($ticket->status !== 'close') {
                 return back()->with('error', 'Only closed tickets can be reopened.');
             }
 
-            // Allow reopen only once
             if ($ticket->reopen_count >= 1) {
                 return back()->with('error', 'This ticket has already been reopened once.');
             }
 
-            // If user reopening, must own ticket
+    
             if ($user->role === 'user' && $ticket->user_id !== $user->id) {
                 abort(403);
             }
@@ -197,11 +184,7 @@ class TicketController extends Controller
             ]);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE STATUS
-        |--------------------------------------------------------------------------
-        */
+
         $ticket->status = $request->status;
         $ticket->save();
 
