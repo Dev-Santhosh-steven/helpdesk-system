@@ -10,7 +10,6 @@
 
 <div class="card p-4">
 
-    {{-- Ticket Created Event --}}
     <div class="timeline-item mb-4">
         <strong>Ticket Created</strong>
         <small class="text-muted d-block">
@@ -23,7 +22,6 @@
 
     <hr>
 
-    {{-- All Comments + System Events --}}
     @foreach($ticket->comments->sortBy('created_at') as $activity)
 
         <div class="timeline-item mb-4">
@@ -46,7 +44,6 @@
 
     @endforeach
 
-    {{-- If Ticket Closed --}}
     @if($ticket->status === 'close')
         <div class="timeline-item mb-4">
             <strong>Ticket Closed</strong>
